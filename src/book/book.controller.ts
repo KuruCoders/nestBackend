@@ -1,9 +1,11 @@
-import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, UseGuards } from '@nestjs/common';
 import { BookService } from './book.service';
 import { Book } from './schemas/book.schems';
 import { CreateBookDto } from './Dto/create.book.dto';
 import { UpdateBookDto } from './Dto/update.book.dto';
+import { AuthGuard } from '@nestjs/passport';
 
+@UseGuards(AuthGuard())
 @Controller('books')
 export class BookController {
     constructor(private bookService: BookService) { }
