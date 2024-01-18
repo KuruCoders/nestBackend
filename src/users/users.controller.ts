@@ -1,5 +1,7 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post, Query, ValidationPipe } from '@nestjs/common';
 import { UsersService } from './users.service';
+import { CreateUserDto } from './Dto/CreateUserDto';
+import { UpdateUserDto } from './Dto/UpdateUserDto';
 
 //the route handled is users
 @Controller('users')
@@ -27,16 +29,16 @@ export class UsersController {
         return this.userService.findAll(role)
     }
     @Get(':id')
-    findOne(@Param('id') id: string) {
-        return this.userService.findOne(+id) // +id is a unery converts string to number
+    findOne(@Param('id',ParseIntPipe) id: number) {
+        return this.userService.findOne(id) // parseInt is a pipe in nest
     }
     @Post()
-    create(@Body() user: { name: string, email: string, role: 'INTERN' | 'ADMIN' }) {
-        return this.userService.create(user)
+    create(@Body(ValidationPipe) createUserDto: CreateUserDto) {
+        return this.userService.create(createUserDto)
     }
     @Patch(':id')
-    update(@Param('id') id: string,@Body() userUpdate:{ name: string, email: string, role: 'INTERN' | 'ADMIN' }) {
-        return this.userService.update(+id,userUpdate)// +id is a unery converts string to number
+    update(@Param('id',ParseIntPipe) id: number,@Body(ValidationPipe) updateUserDto:UpdateUserDto) {
+        return this.userService.update(id,updateUserDto) // parseInt is a pipe in nest can be use for validation req
     }
     @Delete(':id')
     delete(@Param('id') id: string) {
